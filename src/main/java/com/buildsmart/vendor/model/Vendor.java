@@ -6,22 +6,31 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "vendors")
+@Table(
+        name = "vendors",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_vendor_name", columnNames = "name"),
+                @UniqueConstraint(name = "uk_vendor_email", columnNames = "email"),
+                @UniqueConstraint(name = "uk_vendor_phone", columnNames = "phone")
+        }
+)
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class Vendor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long vendorId;
+    @Column(name="vendor_id", nullable = false, updatable = false,length = 20)
+    private String vendorId;
 
     @NotBlank(message = "Vendor name is required")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(length = 500)
     private String contactInfo;
 
+    @Column(unique = true)
     private String email;
+    @Column(unique = true)
     private String phone;
     private String address;
 

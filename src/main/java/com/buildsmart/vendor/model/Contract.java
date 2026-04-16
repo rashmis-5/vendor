@@ -8,21 +8,31 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "contracts")
+@Table(
+        name = "contracts",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_contract_vendor_project_dates",
+                        columnNames = {"vendor_id", "project_id", "start_date", "end_date"}
+                )
+        }
+)
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class Contract {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long contractId;
+    @Column(name="contract_id", nullable = false, updatable = false,length = 20)
+    private String contractId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id", nullable = false)
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Vendor vendor;
 
-    @Column(nullable = false,length=20)
-    private String projectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", nullable = false)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
+    private Project project;
 
     @NotNull
     private LocalDate startDate;

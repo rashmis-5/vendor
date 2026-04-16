@@ -5,13 +5,21 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "deliveries")
+@Table(
+        name = "deliveries",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_delivery_contract_date_item",
+                        columnNames = {"contract_id", "date", "item"}
+                )
+        }
+)
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class Delivery {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long deliveryId;
+    @Column(name="delivery_id", nullable = false, updatable = false,length = 20)
+    private String deliveryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id", nullable = false)

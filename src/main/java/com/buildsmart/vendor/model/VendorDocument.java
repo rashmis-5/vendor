@@ -5,7 +5,15 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "vendor_documents")
+@Table(
+        name = "vendor_documents",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_document_contract_name_type",
+                        columnNames = {"contract_id", "document_name", "document_type"}
+                )
+        }
+)
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class VendorDocument {
 
@@ -39,6 +47,8 @@ public class VendorDocument {
     private LocalDateTime uploadedAt;
     private String approvedBy;
     private LocalDateTime approvedAt;
+    private String rejectedBy;
+    private LocalDateTime rejectedAt;
     private String rejectionReason;
     private String description;
 

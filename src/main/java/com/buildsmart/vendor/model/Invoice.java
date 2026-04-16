@@ -7,13 +7,22 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "invoices")
+@Table(
+        name = "invoices",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_invoice_number", columnNames = "invoice_number"),
+                @UniqueConstraint(
+                        name = "uk_invoice_contract_date_amount",
+                        columnNames = {"contract_id", "date", "amount"}
+                )
+        }
+)
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class Invoice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long invoiceId;
+    @Column(name="invoice_id", nullable = false, updatable = false,length = 20)
+    private String invoiceId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id", nullable = false)
@@ -27,6 +36,7 @@ public class Invoice {
     private LocalDate date;
 
     private LocalDate dueDate;
+    @Column(unique = true)
     private String invoiceNumber;
     private String description;
 
@@ -40,6 +50,8 @@ public class Invoice {
 
     private String approvedBy;
     private LocalDateTime approvedAt;
+    private String rejectedBy;
+    private LocalDateTime rejectedAt;
     private String rejectionReason;
     private String submittedBy;
     private LocalDateTime submittedAt;
